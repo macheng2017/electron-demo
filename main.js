@@ -51,6 +51,18 @@ app.on('activate', function() {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
-ipcMain.on('message', (event, arg) => {
-  console.log(arg)
+ipcMain.on('clickAddMusicBtn', (event, arg) => {
+  createAddMusicWindow()
 })
+
+let addMusicWindow
+function createAddMusicWindow() {
+  addMusicWindow = new BrowserWindow({
+    width: 600,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+  addMusicWindow.loadFile('./renderer/add.html')
+}
