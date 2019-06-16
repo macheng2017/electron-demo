@@ -3,20 +3,30 @@ const { ipcMain, app, BrowserWindow } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+
+class AppWindow extends BrowserWindow {
+  constructor(config, fileLocation) {
+    const baseConfig = {
+      width: 800,
+      height: 600,
+      webPreferences: {
+        nodeIntegration: true
+      }
+    }
+    const finalConfig = { ...baseConfig, ...config }
+    super(finalConfig) // 调用父类
+    this.loadFile(fileLocation) // 调用自己的实例?
+  }
+}
+
 let mainWindow
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
+  mainWindow = new AppWindow({}, './renderer/index.html')
 
   // and load the index.html of the app.
-  mainWindow.loadFile('./renderer/index.html')
+  // mainWindow.loadFile('./renderer/index.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -57,12 +67,11 @@ ipcMain.on('clickAddMusicBtn', (event, arg) => {
 
 let addMusicWindow
 function createAddMusicWindow() {
-  addMusicWindow = new BrowserWindow({
-    width: 600,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-  addMusicWindow.loadFile('./renderer/add.html')
+  addMusicWindow = new AppWindow(
+    {
+      width: 600,
+      height: 600
+    },
+    './renderer/add.html'
+  )
 }
