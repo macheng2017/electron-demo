@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { ipcMain, app, BrowserWindow } = require('electron')
+const { dialog, ipcMain, app, BrowserWindow } = require('electron')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -32,7 +32,7 @@ function createWindow() {
   // mainWindow.loadFile('./renderer/index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -78,3 +78,17 @@ function createAddMusicWindow() {
     './renderer/add.html'
   )
 }
+
+ipcMain.on('showSelectMusicDialog', (event, arg) => {
+  dialog.showOpenDialog(
+    {
+      properties: ['openFile', 'openDirectory', 'multiSelections'],
+      filters: [{ name: 'Music', extensions: ['mp3'] }]
+    },
+    files => {
+      if (files) {
+        event.sender.send('selected-file', files)
+      }
+    }
+  )
+})
