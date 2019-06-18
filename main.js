@@ -13,9 +13,12 @@ class AppWindow extends BrowserWindow {
         nodeIntegration: true
       }
     }
-    const finalConfig = { ...baseConfig, ...config }
+    const finalConfig = { ...baseConfig, ...config, show: false } // add arguments show:false that showing the window after this event will have no visual flash
     super(finalConfig) // 调用父类
     this.loadFile(fileLocation) // 调用自己的实例?
+    this.once('ready-to-show', () => {
+      this.show()
+    })
   }
 }
 
